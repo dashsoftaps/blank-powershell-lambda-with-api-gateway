@@ -1,6 +1,16 @@
+![Architecture](/images/blank-powershell-api-gw-lambda.png)
+
 The deployment uses a CloudFormation YAML template which is based off the [AWS::Serverless Transform](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html)
 
 The included Lambda function (`function/Handler.ps1`) will simply output the number of Lambda functions in the AWS account/region based on https://docs.aws.amazon.com/powershell/latest/reference/items/Get-LMAccountSetting.html
+
+The project source includes function code and supporting resources:
+
+- `function` - A PowerShell function.
+- `template.yml` - An AWS CloudFormation template that creates an application.
+- `1-create-bucket.sh`, `2-deploy.sh`, etc. - Shell scripts that use the AWS CLI to deploy and manage the application.
+
+Use the following instructions to deploy the sample application.
 
 # Requirements
 - [PowerShell 7.0](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell#powershell-core)
@@ -41,3 +51,13 @@ To invoke the function, first edit `3-invoke.sh` with the API endpoint and then 
         "TotalCodeSize": 31112884
       }
     }
+
+# X-Ray
+
+The application uses AWS X-Ray to trace requests. Open the [X-Ray console](https://console.aws.amazon.com/xray/home#/service-map) to view the service map. The following service map shows the function calling Amazon S3.
+
+![Service Map](/images/blank-powershell-servicemap.png)
+
+Choose a node in the main function graph. Then choose **View traces** to see a list of traces. Choose any trace to view a timeline that breaks down the work done by the function.
+
+![Trace](/images/blank-powershell-trace.png)
